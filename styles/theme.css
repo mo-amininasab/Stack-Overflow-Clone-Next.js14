@@ -120,7 +120,7 @@
   .small-regular {
     @apply text-[12px] font-normal leading-[15.6px];
   }
-  .s mall-medium {
+  .small-medium {
     @apply text-[12px] font-medium leading-[15.6px];
   }
   .small-semibold {
