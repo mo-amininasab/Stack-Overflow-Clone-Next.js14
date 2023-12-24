@@ -7,7 +7,7 @@ import {
   MenubarContent,
   MenubarItem,
   MenubarMenu,
-  MenubarTrigger
+  MenubarTrigger,
 } from "@/components/ui/menubar";
 import { themes } from "@/constants";
 
@@ -36,7 +36,7 @@ const Theme = () => {
             />
           )}
         </MenubarTrigger>
-        <MenubarContent className="absolute right-[-3rem] mt-3 min-w-[120px] rounded border py-2 dark:border-dark-400 dark:bg-dark-300">
+        <MenubarContent className="absolute right-[-3rem] mt-3 min-w-[120px] rounded border bg-light-900 py-2 dark:border-dark-400 dark:bg-dark-300">
           {themes.map((item) => (
             <MenubarItem
               key={item.value}
