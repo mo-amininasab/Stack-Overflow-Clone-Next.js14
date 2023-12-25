@@ -20,12 +20,20 @@ import Image from "next/image";
 import { Editor } from "@tinymce/tinymce-react";
 import { Badge } from "../ui/badge";
 import { createQuestion } from "@/lib/actions/question.action";
+import { useRouter, usePathname } from 'next/navigation';
+
+interface Props {
+  mongoUserId: string;
+}
 
 const type: any = "create";
 
-const Question = () => {
+const Question = ({mongoUserId}: Props) => {
   const editorRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const router = useRouter();
+  const pathname = usePathname();
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof QuestionsSchema>>({
@@ -45,9 +53,15 @@ const Question = () => {
       // make an async call to your API -> create a question
       // contain all form data
 
-      await createQuestion({});
+      await createQuestion({
+        title: values.title,
+        content: values.explanation,
+        tags: values.tags,
+        author: JSON.parse(mongoUserId),
+      });
 
       // navigate to home page
+      router.push('/');
     } catch (error) {
       
     } finally {
