@@ -20,7 +20,7 @@ import Image from "next/image";
 import { Editor } from "@tinymce/tinymce-react";
 import { Badge } from "../ui/badge";
 import { createQuestion } from "@/lib/actions/question.action";
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 interface Props {
   mongoUserId: string;
@@ -32,7 +32,7 @@ const Question = ({mongoUserId}: Props) => {
   const editorRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // const router = useRouter();
+  const router = useRouter();
   const pathname = usePathname();
 
   // 1. Define your form.
@@ -62,7 +62,7 @@ const Question = ({mongoUserId}: Props) => {
       });
 
       // navigate to home page
-      // router.push('/');
+      router.push('/');
     } catch (error) {
       
     } finally {
