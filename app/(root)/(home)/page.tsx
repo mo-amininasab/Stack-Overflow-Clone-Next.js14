@@ -16,7 +16,7 @@ export default function Home() {
 
   useEffect(() => {
     getQuestions({}).then((res) => {
-      console.log(res);
+      // console.log(res);
       setQuestions(res)
     })
   }, [])
