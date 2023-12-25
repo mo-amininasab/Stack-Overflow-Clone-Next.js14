@@ -69,9 +69,9 @@ export async function deleteUser({ clerkId }: DeleteUserParams) {
 
     // Delete user form database and questions, answers, comments, etc.
     // get user question ids
-    const userQuestionsIds = await Question.find({ author: user._id }).distinct(
-      "_id"
-    );
+    // const userQuestionsIds = await Question.find({ author: user._id }).distinct(
+    //   "_id"
+    // );
     // delete user questions
     await Question.deleteMany({ author: user._id });
 

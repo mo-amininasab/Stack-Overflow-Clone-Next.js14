@@ -12,7 +12,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function Home() {
-  const [questions, setQuestions] = useState([])
+  const [questions, setQuestions] = useState<any[]>([])
 
   useEffect(() => {
     getQuestions({}).then((res) => {
