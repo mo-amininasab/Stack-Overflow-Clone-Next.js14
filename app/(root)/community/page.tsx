@@ -1,22 +1,12 @@
-"use client";
-
 import UserCard from "@/components/cards/UserCard";
 import Filter from "@/components/shared/Filter";
 import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
 import { UserFilters } from "@/constants/filters";
 import { getAllUsers } from "@/lib/actions/user.action";
 import Link from "next/link";
-import { useState, useEffect } from "react";
 
-const CommunityPage = () => {
-  const [users, setUsers] = useState<any[]>([]);
-
-  useEffect(() => {
-    getAllUsers({}).then((res) => {
-      console.log(res);
-      setUsers(res.users);
-    });
-  }, []);
+const CommunityPage = async () => {
+  const { users } = await getAllUsers({});
 
   return (
     <>

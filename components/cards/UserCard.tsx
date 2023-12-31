@@ -1,7 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { getTopInteractedTags } from "@/lib/actions/tag.actions";
-import { useEffect, useState } from "react";
 import { Badge } from "../ui/badge";
 import RenderTag from "../shared/RenderTag";
 
@@ -15,15 +14,8 @@ interface Props {
   };
 }
 
-const UserCard = ({ user }: Props) => {
-  const [interactedTags, setInteractedTags] = useState<any[]>([]);
-
-  useEffect(() => {
-    getTopInteractedTags({ userId: user._id }).then((res) => {
-      // console.log(res);
-      setInteractedTags(res);
-    });
-  }, []);
+const UserCard = async ({ user }: Props) => {
+  const interactedTags = await getTopInteractedTags({ userId: user._id });
 
   return (
     <Link
