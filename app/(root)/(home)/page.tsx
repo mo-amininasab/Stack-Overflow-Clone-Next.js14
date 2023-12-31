@@ -1,5 +1,3 @@
-"use client";
-
 import QuestionCard from "@/components/cards/QuestionCard";
 import HomeFilters from "@/components/home/HomeFilters";
 import Filter from "@/components/shared/Filter";
@@ -9,18 +7,9 @@ import { Button } from "@/components/ui/button";
 import { HomePageFilters } from "@/constants/filters";
 import { getQuestions } from "@/lib/actions/question.action";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
-export default function Home() {
-  const [questions, setQuestions] = useState<any[]>([])
-
-  useEffect(() => {
-    getQuestions({}).then((res) => {
-      // console.log(res);
-      setQuestions(res)
-    })
-  }, [])
-  
+export default async function Home() {
+  const questions = await getQuestions({});
 
   return (
     <>
