@@ -15,7 +15,7 @@ export async function getQuestions(params: GetQuestionsParams) {
       .populate({ path: "tags", model: Tag })
       .populate({ path: "author", model: User })
       .sort({ createdAt: -1 })
-      .lean();
+      // .lean();
 
     // console.log("questions", questions);
     // console.log("hello form server");
@@ -31,7 +31,13 @@ export async function createQuestion(params: CreateQuestionParams) {
   try {
     connectToDatabase();
 
-    const { title, content, tags, author, path } = params;
+    const {
+      title,
+      content,
+      tags,
+      author,
+      // path
+    } = params;
 
     // create the question
     const question = await Question.create({
@@ -61,6 +67,7 @@ export async function createQuestion(params: CreateQuestionParams) {
 
     // Increment author's reputation by +5 for creating a question
 
-    revalidatePath(path);
+    // console.log('the path is: ', path);
+    revalidatePath("/");
   } catch (error) {}
 }
