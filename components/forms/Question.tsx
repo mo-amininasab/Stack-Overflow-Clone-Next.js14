@@ -20,7 +20,8 @@ import Image from "next/image";
 import { Editor } from "@tinymce/tinymce-react";
 import { Badge } from "../ui/badge";
 import { createQuestion } from "@/lib/actions/question.action";
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter } from "next/navigation";
+import { useTheme } from "@/context/ThemeProvider";
 
 interface Props {
   mongoUserId: string;
@@ -28,7 +29,9 @@ interface Props {
 
 const type: any = "create";
 
-const Question = ({mongoUserId}: Props) => {
+const Question = ({ mongoUserId }: Props) => {
+  const { mode } = useTheme();
+
   const editorRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -48,7 +51,7 @@ const Question = ({mongoUserId}: Props) => {
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof QuestionsSchema>) {
     setIsSubmitting(true);
-    
+
     try {
       // make an async call to your API -> create a question
       // contain all form data
@@ -62,9 +65,8 @@ const Question = ({mongoUserId}: Props) => {
       });
 
       // navigate to home page
-      router.push('/');
+      router.push("/");
     } catch (error) {
-      
     } finally {
       setIsSubmitting(false);
     }
@@ -178,6 +180,8 @@ const Question = ({mongoUserId}: Props) => {
                       "alignright alignjustify | bullist numlist | " +
                       "removeformat",
                     content_style: "body { font-family:Inter; font-size:16px }",
+                    skin: mode === "dark" ? "oxide-dark" : "oxide",
+                    content_css: mode === "dark" ? "dark" : "light",
                   }}
                 />
               </FormControl>
