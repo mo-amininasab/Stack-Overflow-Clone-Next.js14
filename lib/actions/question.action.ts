@@ -4,7 +4,7 @@ import Question from "@/database/question.model";
 import Tag from "@/database/tag.model";
 import User from "@/database/user.model";
 import { connectToDatabase } from "../mongoose";
-import { CreateQuestionParams, GetQuestionsParams } from "./shared.types";
+import { CreateQuestionParams, GetQuestionByIdParams, GetQuestionsParams } from "./shared.types";
 import { revalidatePath } from "next/cache";
 
 export async function getQuestions(params: GetQuestionsParams) {
@@ -14,8 +14,8 @@ export async function getQuestions(params: GetQuestionsParams) {
     const questions = await Question.find({})
       .populate({ path: "tags", model: Tag })
       .populate({ path: "author", model: User })
-      .sort({ createdAt: -1 })
-      // .lean();
+      .sort({ createdAt: -1 });
+    // .lean();
 
     // console.log("questions", questions);
     // console.log("hello form server");
@@ -70,4 +70,23 @@ export async function createQuestion(params: CreateQuestionParams) {
     // console.log('the path is: ', path);
     revalidatePath("/");
   } catch (error) {}
+}
+
+export async function getQuestionById({ questionId }: GetQuestionByIdParams) {
+  try {
+    connectToDatabase();
+
+    const question = await Question.findById(questionId)
+      .populate({ path: "tags", model: Tag, select: "_id name" })
+      .populate({
+        path: "author",
+        model: User,
+        select: "_id clerckId name picture",
+      });
+
+    return  question ;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
 }
