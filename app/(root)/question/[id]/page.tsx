@@ -8,13 +8,13 @@ import { ITag } from "@/database/tag.model";
 import { getQuestionById } from "@/lib/actions/question.action";
 import { getUserById } from "@/lib/actions/user.action";
 import { formatAndDivideNumber, getTimestamp } from "@/lib/utils";
+import { URLProps } from "@/types";
 import { auth } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-// @ts-ignore
-const QuestionDetailPage = async ({ params, searchParams }) => {
+const QuestionDetailPage = async ({ params, searchParams }: URLProps) => {
   const question = await getQuestionById({ questionId: params.id });
   const { userId: clerkId } = auth();
 
