@@ -13,6 +13,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
+// @ts-ignore
 const QuestionDetailPage = async ({ params, searchParams }) => {
   const question = await getQuestionById({ questionId: params.id });
   const { userId: clerkId } = auth();
