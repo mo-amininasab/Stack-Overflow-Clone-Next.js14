@@ -1,6 +1,11 @@
 "use server";
 
+import Answer from "@/database/answer.model";
+import Question from "@/database/question.model";
+import Tag from "@/database/tag.model";
 import User from "@/database/user.model";
+import { FilterQuery } from "mongoose";
+import { revalidatePath } from "next/cache";
 import { connectToDatabase } from "../mongoose";
 import {
   CreateUserParams,
@@ -12,11 +17,6 @@ import {
   ToggleSaveQuestionParams,
   UpdateUserParams,
 } from "./shared.types";
-import { revalidatePath } from "next/cache";
-import Question from "@/database/question.model";
-import Tag from "@/database/tag.model";
-import { FilterQuery } from "mongoose";
-import Answer from "@/database/answer.model";
 
 export async function getUserById(params: any) {
   try {
@@ -221,6 +221,27 @@ export async function getUserQuestions({
       .populate("author", "_id clerkId name picture");
 
     return { totalQuestions, questions: userQuestions };
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function getUserAnswers({
+  userId,
+  page = 1,
+  pageSize = 10,
+}: GetUserStatsParams) {
+  try {
+    await connectToDatabase();
+
+    const totalAnswers = await Answer.countDocuments({ author: userId });
+    const userAnswers = await Answer.find({ author: userId })
+      .sort({ upvotes: -1 })
+      .populate("question", "_id title")
+      .populate("author", "_id clerkId name picture");
+
+    return { totalAnswers, answers: userAnswers };
   } catch (error) {
     console.log(error);
     throw error;
