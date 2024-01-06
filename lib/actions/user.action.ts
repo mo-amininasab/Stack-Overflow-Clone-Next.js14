@@ -8,6 +8,7 @@ import {
   GetAllUsersParams,
   GetSavedQuestionsParams,
   GetUserByIdParams,
+  GetUserStatsParams,
   ToggleSaveQuestionParams,
   UpdateUserParams,
 } from "./shared.types";
@@ -173,36 +174,56 @@ export async function getSavedQuestions({
       ],
     });
 
-    if(!user) {
-      throw new Error('User not found')
+    if (!user) {
+      throw new Error("User not found");
     }
 
     const savedQuestions = user.saved;
 
-    return {questions: savedQuestions}
+    return { questions: savedQuestions };
   } catch (error) {
     console.log(error);
     throw error;
   }
 }
 
-export async function getUserInfo({userId}: GetUserByIdParams) {
+export async function getUserInfo({ userId }: GetUserByIdParams) {
   try {
     await connectToDatabase();
 
-    const user = await User.findOne({clerkId: userId});
-    if(!user) {
-      throw new Error('User not found')
+    const user = await User.findOne({ clerkId: userId });
+    if (!user) {
+      throw new Error("User not found");
     }
 
-    const totalQuestions = await Question.countDocuments({author: user._id})
-    const totalAnswers = await Answer.countDocuments({author: user._id})
+    const totalQuestions = await Question.countDocuments({ author: user._id });
+    const totalAnswers = await Answer.countDocuments({ author: user._id });
 
-    return {user, totalQuestions, totalAnswers}
+    return { user, totalQuestions, totalAnswers };
   } catch (error) {
     console.log(error);
     throw error;
+  }
+}
 
+export async function getUserQuestions({
+  userId,
+  page = 1,
+  pageSize = 10,
+}: GetUserStatsParams) {
+  try {
+    await connectToDatabase();
+
+    const totalQuestions = await Question.countDocuments({ author: userId });
+    const userQuestions = await Question.find({ author: userId })
+      .sort({ views: -1, upvotes: -1 })
+      .populate("tags", "_id name")
+      .populate("author", "_id clerkId name picture");
+
+    return { totalQuestions, questions: userQuestions };
+  } catch (error) {
+    console.log(error);
+    throw error;
   }
 }
 
