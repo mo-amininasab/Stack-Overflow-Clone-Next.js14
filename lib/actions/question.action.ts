@@ -7,6 +7,7 @@ import { connectToDatabase } from "../mongoose";
 import {
   CreateQuestionParams,
   DeleteQuestionParams,
+  EditQuestionParams,
   GetQuestionByIdParams,
   GetQuestionsParams,
   QuestionVoteParams,
@@ -35,19 +36,15 @@ export async function getQuestions(params: GetQuestionsParams) {
   }
 }
 
-export async function createQuestion(params: CreateQuestionParams) {
+export async function createQuestion({
+  title,
+  content,
+  tags,
+  author,
+}: CreateQuestionParams) {
   try {
     connectToDatabase();
 
-    const {
-      title,
-      content,
-      tags,
-      author,
-      // path
-    } = params;
-
-    // create the question
     const question = await Question.create({
       title,
       content,
@@ -77,6 +74,30 @@ export async function createQuestion(params: CreateQuestionParams) {
 
     // console.log('the path is: ', path);
     revalidatePath("/");
+  } catch (error) {}
+}
+
+export async function editQuestion({
+  questionId,
+  title,
+  content,
+  path,
+}: EditQuestionParams) {
+  try {
+    connectToDatabase();
+
+    // find the question that has to be edited
+    const question = await Question.findById(questionId).populate("tags");
+    if (!question) {
+      throw new Error("Question not found");
+    }
+
+    question.title = title;
+    question.content = content;
+
+    await question.save();
+
+    revalidatePath(path);
   } catch (error) {}
 }
 
