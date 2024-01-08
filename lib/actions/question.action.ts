@@ -6,11 +6,14 @@ import User from "@/database/user.model";
 import { connectToDatabase } from "../mongoose";
 import {
   CreateQuestionParams,
+  DeleteQuestionParams,
   GetQuestionByIdParams,
   GetQuestionsParams,
   QuestionVoteParams,
 } from "./shared.types";
 import { revalidatePath } from "next/cache";
+import Answer from "@/database/answer.model";
+import Interaction from "@/database/interaction.model";
 
 export async function getQuestions(params: GetQuestionsParams) {
   try {
@@ -168,6 +171,35 @@ export async function downvoteQuestion({
     }
 
     // Increment author's reputation
+
+    revalidatePath(path);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function deleteQuestion({
+  questionId,
+  path,
+}: DeleteQuestionParams) {
+  try {
+    connectToDatabase();
+
+    // delete the question
+    await Question.deleteOne({ _id: questionId });
+
+    // delete all answers associated with that question
+    await Answer.deleteMany({ question: questionId });
+
+    // delete all interactions related to this question
+    await Interaction.deleteMany({ question: questionId });
+
+    // update the Tag that no longer includes references to this specific question
+    await Tag.updateMany(
+      { question: questionId },
+      { $pull: { questions: questionId } }
+    );
 
     revalidatePath(path);
   } catch (error) {
