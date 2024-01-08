@@ -19,7 +19,7 @@ const EditQuestionPage = async ({params, searchParams}: URLProps) => {
       <div className='mt-9'>
         <Question 
           type='Edit'
-          mongoUserId={mongoUser._id}
+          mongoUserId={JSON.stringify(mongoUser._id)}
           questionDetails={JSON.stringify(question)}
         />
       </div>
