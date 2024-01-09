@@ -12,7 +12,6 @@ import { URLProps } from "@/types";
 import { auth } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
 
 const QuestionDetailPage = async ({ params, searchParams }: URLProps) => {
   const question = await getQuestionById({ questionId: params.id });
@@ -101,6 +100,8 @@ const QuestionDetailPage = async ({ params, searchParams }: URLProps) => {
         questionId={question._id}
         userId={mongoUser._id}
         totalAnswers={question.answers.length}
+        page={searchParams?.page}
+        filter={searchParams?.filter}
       />
 
       <Answer
