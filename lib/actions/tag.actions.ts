@@ -1,15 +1,15 @@
 "use server";
 
+import Question from "@/database/question.model";
+import Tag, { ITag } from "@/database/tag.model";
 import User from "@/database/user.model";
+import { FilterQuery } from "mongoose";
 import { connectToDatabase } from "../mongoose";
 import {
   GetAllTagsParams,
   GetQuestionsByTagIdParams,
   GetTopInteractedTagsParams,
 } from "./shared.types";
-import Tag, { ITag } from "@/database/tag.model";
-import { FilterQuery } from "mongoose";
-import Question from "@/database/question.model";
 
 export async function getTopInteractedTags({
   userId,
@@ -35,16 +35,22 @@ export async function getTopInteractedTags({
   }
 }
 
-export async function getAllTags({
+export async function getTags({
+  searchQuery,
+  filter,
   page,
   pageSize,
-  filter,
-  searchQuery,
 }: GetAllTagsParams) {
   try {
     connectToDatabase();
 
-    const tags: ITag[] = await Tag.find({});
+    const query: FilterQuery<typeof Tag> = {};
+
+    if (searchQuery) {
+      query.$or = [{ name: { $regex: new RegExp(searchQuery, "i") } }];
+    }
+
+    const tags: ITag[] = await Tag.find(query);
 
     return { tags };
   } catch (error) {
@@ -55,18 +61,20 @@ export async function getAllTags({
 
 export async function getQuestionsByTagId({
   tagId,
+  searchQuery,
   page = 1,
   pageSize = 10,
-  searchQuery,
 }: GetQuestionsByTagIdParams) {
   try {
     connectToDatabase();
 
-    const tagFilter: FilterQuery<ITag> = { _id: tagId };
+    const tagFilter: FilterQuery<typeof Tag> = { _id: tagId };
     const tag = await Tag.findOne(tagFilter).populate({
       path: "questions",
       model: Question,
-      match: searchQuery ? { $regex: searchQuery, $options: "i" } : {},
+      match: searchQuery
+        ? { title: { $regex: new RegExp(searchQuery, "i") } }
+        : {},
       options: {
         sort: { createdAt: -1 },
       },

@@ -7,7 +7,9 @@ import { getSavedQuestions } from "@/lib/actions/user.action";
 import { SearchParamsProps } from "@/types";
 import { auth } from "@clerk/nextjs";
 
-export default async function CollectionPage({ searchParams }: SearchParamsProps) {
+export default async function CollectionPage({
+  searchParams,
+}: SearchParamsProps) {
   const { userId } = auth();
   if (!userId) return null;
 
@@ -22,7 +24,7 @@ export default async function CollectionPage({ searchParams }: SearchParamsProps
 
       <div className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
         <LocalSearchbar
-          route="/"
+          route={`/collection`}
           iconPosition="left"
           imgSrc="/assets/icons/search.svg"
           placeholder="Search for questions"

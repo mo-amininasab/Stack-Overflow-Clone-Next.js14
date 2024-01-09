@@ -8,7 +8,6 @@ import React from "react";
 const TagDetailPage = async ({ params, searchParams }: URLProps) => {
   const { tagTitle, questions } = await getQuestionsByTagId({
     tagId: params.id,
-    page: 1,
     searchQuery: searchParams.q,
   });
 
@@ -18,7 +17,7 @@ const TagDetailPage = async ({ params, searchParams }: URLProps) => {
 
       <div className="mt-11 w-full">
         <LocalSearchbar
-          route="/"
+          route={`/tags/${params.id}`}
           iconPosition="left"
           imgSrc="/assets/icons/search.svg"
           placeholder="Search for tag questions"
