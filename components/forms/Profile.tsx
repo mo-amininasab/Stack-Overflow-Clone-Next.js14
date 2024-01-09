@@ -11,8 +11,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { updateUser } from "@/lib/actions/user.action";
 import { ProfileSchema } from "@/lib/validations";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -24,6 +26,8 @@ interface Props {
 
 const Profile = ({ clerkId, user }: Props) => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const pathname = usePathname();
+  const router = useRouter();
 
   const parsedUser = JSON.parse(user);
 
@@ -38,17 +42,36 @@ const Profile = ({ clerkId, user }: Props) => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof ProfileSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof ProfileSchema>) {
+    setIsSubmitting(true);
+
+    try { 
+      await updateUser({
+        clerkId,
+        updateData: {
+          name: values.name,
+          username: values.username,
+          portfolioWebsite: values.portfolioWebsite,
+          location: values.location,
+          bio: values.bio,
+        },
+        path: pathname
+      })
+      
+      router.back();
+    } catch (error) {
+      console.log(error);
+      
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="mt-9 flex w-full gap-9 flex-col"
+        className="mt-9 flex w-full flex-col gap-9"
       >
         <FormField
           control={form.control}
