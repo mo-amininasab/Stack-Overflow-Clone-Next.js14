@@ -94,7 +94,7 @@ export async function deleteUser({ clerkId }: DeleteUserParams) {
   }
 }
 
-export async function getAllUsers({
+export async function getUsers({
   page = 1,
   pageSize = 20,
   filter,
@@ -103,7 +103,16 @@ export async function getAllUsers({
   try {
     connectToDatabase();
 
-    const users = await User.find({}).sort({ createdAt: -1 });
+    const query: FilterQuery<typeof User> = {};
+
+    if (searchQuery) {
+      query.$or = [
+        { name: { $regex: new RegExp(searchQuery, "i") } },
+        { username: { $regex: new RegExp(searchQuery, "i") } },
+      ];
+    }
+
+    const users = await User.find(query).sort({ createdAt: -1 });
 
     return { users };
   } catch (error) {
