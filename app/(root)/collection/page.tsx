@@ -4,14 +4,14 @@ import NoResult from "@/components/shared/NoResult";
 import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
 import { QuestionFilters } from "@/constants/filters";
 import { getSavedQuestions } from "@/lib/actions/user.action";
-import { auth } from '@clerk/nextjs';
+import { auth } from "@clerk/nextjs";
 
 export default async function CollectionPage() {
-  const {userId} = auth();
-  if(!userId) return null;
+  const { userId } = auth();
+  if (!userId) return null;
 
-  const {questions} = await getSavedQuestions({
-    clerkId: userId
+  const { questions } = await getSavedQuestions({
+    clerkId: userId,
   });
 
   return (
@@ -20,7 +20,7 @@ export default async function CollectionPage() {
 
       <div className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
         <LocalSearchbar
-          rout="/"
+          route="/"
           iconPosition="left"
           imgSrc="/assets/icons/search.svg"
           placeholder="Search for questions"

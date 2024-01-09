@@ -1,30 +1,29 @@
-import QuestionCard from '@/components/cards/QuestionCard'
-import NoResult from '@/components/shared/NoResult'
-import LocalSearchbar from '@/components/shared/search/LocalSearchbar'
-import { getQuestionsByTagId } from '@/lib/actions/tag.actions'
-import { URLProps } from '@/types'
-import React from 'react'
+import QuestionCard from "@/components/cards/QuestionCard";
+import NoResult from "@/components/shared/NoResult";
+import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
+import { getQuestionsByTagId } from "@/lib/actions/tag.actions";
+import { URLProps } from "@/types";
+import React from "react";
 
-const TagDetailPage = async ({params, searchParams}: URLProps) => {
-  const {tagTitle, questions} = await getQuestionsByTagId({
+const TagDetailPage = async ({ params, searchParams }: URLProps) => {
+  const { tagTitle, questions } = await getQuestionsByTagId({
     tagId: params.id,
     page: 1,
     searchQuery: searchParams.q,
-  })
-  
+  });
+
   return (
     <>
       <h1 className="h1-bold text-dark100_light900">{tagTitle}</h1>
 
       <div className="mt-11 w-full">
         <LocalSearchbar
-          rout="/"
+          route="/"
           iconPosition="left"
           imgSrc="/assets/icons/search.svg"
           placeholder="Search for tag questions"
           otherClasses="flex-1"
         />
-
       </div>
 
       <div className="mt-10 flex w-full flex-col gap-6">
@@ -53,7 +52,7 @@ const TagDetailPage = async ({params, searchParams}: URLProps) => {
         )}
       </div>
     </>
-  )
-}
+  );
+};
 
-export default TagDetailPage
+export default TagDetailPage;
