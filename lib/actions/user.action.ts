@@ -95,10 +95,10 @@ export async function deleteUser({ clerkId }: DeleteUserParams) {
 }
 
 export async function getUsers({
+  searchQuery,
+  filter,
   page = 1,
   pageSize = 20,
-  filter,
-  searchQuery,
 }: GetAllUsersParams) {
   try {
     connectToDatabase();
@@ -112,7 +112,24 @@ export async function getUsers({
       ];
     }
 
-    const users = await User.find(query).sort({ createdAt: -1 });
+    let sortOptions = {};
+
+    switch (filter) {
+      case "new_users":
+        sortOptions = { joinedAt: -1 };
+        break;
+      case "old_users":
+        sortOptions = { joinedAt: 1 };
+        break;
+      case "top_contributors":
+        sortOptions = { reputation: -1 };
+        break;
+
+      default:
+        break;
+    }
+
+    const users = await User.find(query).sort(sortOptions);
 
     return { users };
   } catch (error) {
