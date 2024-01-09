@@ -39,7 +39,9 @@ const Question = ({ mongoUserId, type, questionDetails }: Props) => {
   const pathname = usePathname();
 
   const parsedQuestionDetails = questionDetails && JSON.parse(questionDetails);
+  const parsedQuestionDetails = questionDetails && JSON.parse(questionDetails);
   // @ts-ignore
+  const groupedTags = parsedQuestionDetails?.tags.map((tag) => tag.name);
   const groupedTags = parsedQuestionDetails?.tags.map((tag) => tag.name);
 
   const form = useForm<z.infer<typeof QuestionsSchema>>({
@@ -165,6 +167,7 @@ const Question = ({ mongoUserId, type, questionDetails }: Props) => {
                   onBlur={field.onBlur}
                   onEditorChange={(content) => field.onChange(content)}
                   initialValue={parsedQuestionDetails?.content || ""}
+                  initialValue={parsedQuestionDetails?.content || ""}
                   init={{
                     height: 350,
                     menubar: true,
@@ -220,7 +223,7 @@ const Question = ({ mongoUserId, type, questionDetails }: Props) => {
                     placeholder="Add tags..."
                     className="no-focus paragraph-regular background-light700_dark300 light-border-2 text-dark300_light700 min-h-[56px] border"
                   />
-                  {field.value.length > 0 && (
+                  {field.value?.length > 0 && (
                     <div className="flex-start mt-2.5 gap-2.5">
                       {field.value.map((tag: any) => (
                         <Badge
