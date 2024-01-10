@@ -101,12 +101,20 @@ export async function createQuestion({
     });
 
     // Create an interaction record for the user's ask_question action
+    await Interaction.create({
+      user: author,
+      action: "ask_question",
+      question: question._id,
+      tags: tagDocuments,
+    });
 
     // Increment author's reputation by +5 for creating a question
+    await User.findByIdAndUpdate(author, { $inc: { reputation: 5 } });
 
-    // console.log('the path is: ', path);
     revalidatePath("/");
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 export async function editQuestion({
@@ -183,7 +191,14 @@ export async function upvoteQuestion({
       throw new Error("Question not found");
     }
 
-    // Increment author's reputation
+    // Increment author's reputation by +1/-1 for upvoting/revoking an upvote to the other's questions
+    await User.findByIdAndUpdate(userId, {
+      $inc: {reputation: hasupVoted ? -1 : 1}
+    })
+    // Increment author's reputation by +10/-10 for receiving an upvote/downvote to the question
+    await User.findByIdAndUpdate(question.author, {
+      $inc: {reputation: hasupVoted ? -10 : 10}
+    })
 
     revalidatePath(path);
   } catch (error) {
