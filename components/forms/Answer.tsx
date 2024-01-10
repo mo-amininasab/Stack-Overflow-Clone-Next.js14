@@ -15,7 +15,7 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Button } from "../ui/button";
-import Image from "next/image";
+// import Image from "next/image";
 import { createAnswer } from "@/lib/actions/answer.action";
 import { usePathname } from "next/navigation";
 
@@ -28,6 +28,7 @@ interface Props {
 const Answer = ({ question, questionId, authorId }: Props) => {
   const { mode } = useTheme();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  // const [isSubmittingAI, setIsSubmittingAI] = useState(false);
 
   const pathname = usePathname();
 
@@ -63,15 +64,40 @@ const Answer = ({ question, questionId, authorId }: Props) => {
     }
   };
 
+  // const generateAIAnswer = async () => {
+  //   if (!authorId) return;
+
+  //   setIsSubmittingAI(true);
+
+  //   try {
+  //     // const response = await fetch(
+  //     //   `${process.env.NEXT_PUBLIC_SERVER_URL}/api/chatgpt`,
+  //     //   {
+  //     //     method: "POST",
+  //     //     body: JSON.stringify({ question }),
+  //     //   }
+  //     // );
+
+  //     // const aiAnswer = await response.json();
+
+  //     // alert(aiAnswer);
+  //     // console.log(aiAnswer);
+  //   } catch (error) {
+  //     console.log(error);
+  //   } finally {
+  //     setIsSubmittingAI(false);
+  //   }
+  // };
+
   return (
     <div>
       <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center sm:gap-2">
         <h4 className="paragraph-semibold text-dark400_light800">
           Write your answer here
         </h4>
-        <Button
-          onClick={() => {}}
+        {/* <Button
           className="btn light-border-2 gap-1.5 rounded-md px-4 py-2.5 text-primary-500 shadow-none dark:text-primary-500"
+          // onClick={generateAIAnswer}
         >
           <Image
             src="/assets/icons/stars.svg"
@@ -80,8 +106,8 @@ const Answer = ({ question, questionId, authorId }: Props) => {
             height={12}
             className="object-contain"
           />
-          Generate an AI Answer
-        </Button>
+          Generate AI Answer
+        </Button> */}
       </div>
 
       <Form {...form}>
