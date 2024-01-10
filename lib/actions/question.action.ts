@@ -21,7 +21,7 @@ export async function getQuestions({
   searchQuery,
   filter,
   page = 1,
-  pageSize = 2,
+  pageSize = 10,
 }: GetQuestionsParams) {
   try {
     connectToDatabase();
