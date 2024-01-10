@@ -219,11 +219,15 @@ export async function getSavedQuestions({
         break;
     }
 
+    const skipAmount = (page - 1) * pageSize;
+
     const user = await User.findOne({ clerkId }).populate({
       path: "saved",
       match: query,
       options: {
         sort: sortOptions,
+        skip: skipAmount,
+        limit: pageSize + 1,
       },
       populate: [
         { path: "tags", model: Tag, select: "_id name" },
@@ -235,9 +239,11 @@ export async function getSavedQuestions({
       throw new Error("User not found");
     }
 
+    const isNext = user.saved.length > pageSize;
+
     const savedQuestions = user.saved;
 
-    return { questions: savedQuestions };
+    return { questions: savedQuestions, isNext };
   } catch (error) {
     console.log(error);
     throw error;
